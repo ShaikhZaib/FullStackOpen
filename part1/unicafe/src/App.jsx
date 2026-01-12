@@ -9,6 +9,10 @@ function App() {
   const incNeutral = () => setNeutral(neutral + 1);
   const incBad = () => setBad(bad + 1);
 
+  const all = good + neutral + bad;
+  const avg = (good * 1 + neutral * 0 + bad * -1) / all;
+  const pos = (good / all) * 100;
+
   return (
     <div>
       <div>
@@ -21,6 +25,9 @@ function App() {
       <p>Good: {good}</p>
       <p>Neutral: {neutral}</p>
       <p>Bad: {bad}</p>
+      <p>All: {all}</p>
+      <p>Average: {avg}</p>
+      <p>Positive: {pos} %</p>
     </div>
   );
 }
