@@ -1,41 +1,6 @@
 import { useState } from "react";
-
-const Button = (props) => {
-  const { handleClick, text } = props;
-  return <button onClick={handleClick}>{text}</button>;
-};
-
-const StatisticLine = (props) => {
-  const { text, value } = props;
-  return (
-    <p>
-      {text}: {value}
-    </p>
-  );
-};
-
-const Statistics = (props) => {
-  const { good, neutral, bad, all, avg, pos } = props;
-  if (all === 0) {
-    return (
-      <div>
-        {" "}
-        <h4>No feedback Given</h4>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <StatisticLine text="Good" value={good} />
-        <StatisticLine text="Neutral" value={neutral} />
-        <StatisticLine text="Bad" value={bad} />
-        <StatisticLine text="All" value={all} />
-        <StatisticLine text="Average" value={avg} />
-        <StatisticLine text="Positive" value={`${pos}%`} />
-      </div>
-    );
-  }
-};
+import Statistics from "./Statictics";
+import Button from "./Button";
 
 const App = () => {
   const [good, setGood] = useState(0);
