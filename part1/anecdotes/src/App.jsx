@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 function App() {
-  const [selected, setSelected] = useState(0);
-
   const anecdotes = [
     "If it hurts, do it more often.",
     "Adding manpower to a late software project makes it later!",
@@ -22,16 +20,27 @@ function App() {
     "Premature optimization is the root of all evil.",
   ];
 
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+
   const ranNum = () => {
     let ranNum = Math.floor(Math.random() * (anecdotes.length - 1));
     setSelected(ranNum);
   };
 
+  const voteForAnecdote = () => {
+    console.log("voting for anecdote ", selected);
+    const copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
+  };
+
   return (
     <div>
-      {anecdotes[selected]}
+      <div> {anecdotes[selected]} </div>
+      <div>{`Has ${votes[selected]} Votes`}</div>
       <div>
-        {" "}
+        <button onClick={voteForAnecdote}>Vote</button>{" "}
         <button onClick={ranNum}>Next Anectdote</button>{" "}
       </div>
     </div>
