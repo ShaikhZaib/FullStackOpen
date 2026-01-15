@@ -1,4 +1,4 @@
-function Persons({ persons }) {
+function Persons({ persons = [] }) {
   return (
     <div>
       {persons.map((person) => (
