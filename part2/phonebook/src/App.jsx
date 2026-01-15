@@ -18,7 +18,7 @@ function App() {
     const NewPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      // id: persons.length + 1,
     };
 
     phonebookServices.create(NewPerson).then((response) => {
@@ -38,6 +38,15 @@ function App() {
 
   const handleSearch = (event) => {
     setSearchName(event.target.value);
+  };
+
+  const handleDelete = (id) => {
+    const person = persons.find((person) => person.id === id);
+    if (window.confirm(`Delete ${person.name}`)) {
+      phonebookServices.remove(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
+    }
   };
 
   const getPersonsFromServer = () => {
@@ -68,7 +77,7 @@ function App() {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
   );
 }
