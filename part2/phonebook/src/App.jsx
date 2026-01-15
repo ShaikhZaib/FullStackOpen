@@ -12,13 +12,43 @@ function App() {
 
   const addName = (event) => {
     event.preventDefault();
-    if (persons.find((person) => person.name === newName)) {
-      return alert(` ${newName} is already added to phonebook`);
+
+    const existingPerson = persons.find((person) => person.name === newName);
+
+    if (existingPerson) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with the new one?`
+        )
+      ) {
+        const updatedPerson = {
+          ...existingPerson,
+          number: newNumber,
+        };
+
+        phonebookServices
+          .update(existingPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) => {
+                return person.id !== returnedPerson.id
+                  ? person
+                  : returnedPerson;
+              })
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+      } else {
+        setNewName("");
+        setNewNumber("");
+      }
+      return;
     }
+
     const NewPerson = {
       name: newName,
       number: newNumber,
-      // id: persons.length + 1,
     };
 
     phonebookServices.create(NewPerson).then((response) => {
