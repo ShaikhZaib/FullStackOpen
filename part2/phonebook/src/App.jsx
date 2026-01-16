@@ -12,6 +12,10 @@ function App() {
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
   const [message, setMessage] = useState(null);
+  const [messageClass, setMessageClass] = useState("");
+
+  const success = "message";
+  const failure = "error";
 
   const addName = (event) => {
     event.preventDefault();
@@ -40,9 +44,26 @@ function App() {
               })
             );
             setMessage(`Added ${returnedPerson.name}`);
+            setMessageClass(success);
             setTimeout(() => {
               setMessage(null);
+              setMessageClass("");
             }, 5000);
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(() => {
+            setMessage(
+              `Information of ${existingPerson.name} has alredy been removed from the server`
+            );
+            setMessageClass(failure);
+            setTimeout(() => {
+              setMessage(null);
+              setMessageClass("");
+            }, 5000);
+            setPersons(
+              persons.filter((person) => person.name !== existingPerson.name)
+            );
             setNewName("");
             setNewNumber("");
           });
@@ -61,8 +82,10 @@ function App() {
     phonebookServices.create(NewPerson).then((response) => {
       setPersons(persons.concat(response.data));
       setMessage(`Added ${NewPerson.name}`);
+      setMessageClass(success);
       setTimeout(() => {
         setMessage(null);
+        setMessageClass("");
       }, 5000);
       setNewName("");
       setNewNumber("");
@@ -108,7 +131,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} className={messageClass} />
       <Filter searchName={searchName} handleSearch={handleSearch} />
       <h2>Add a new</h2>
       <PersonForm
