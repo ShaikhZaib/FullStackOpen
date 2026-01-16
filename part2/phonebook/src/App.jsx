@@ -3,12 +3,15 @@ import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import phonebookServices from "./services/persons.js";
+import "./index.css";
+import Notification from "./components/Notification.jsx";
 
 function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [message, setMessage] = useState(null);
 
   const addName = (event) => {
     event.preventDefault();
@@ -36,6 +39,10 @@ function App() {
                   : returnedPerson;
               })
             );
+            setMessage(`Added ${returnedPerson.name}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
             setNewName("");
             setNewNumber("");
           });
@@ -53,6 +60,10 @@ function App() {
 
     phonebookServices.create(NewPerson).then((response) => {
       setPersons(persons.concat(response.data));
+      setMessage(`Added ${NewPerson.name}`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
       setNewName("");
       setNewNumber("");
     });
@@ -97,6 +108,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter searchName={searchName} handleSearch={handleSearch} />
       <h2>Add a new</h2>
       <PersonForm
