@@ -28,6 +28,15 @@ app.get("/", (request, response) => {
   response.send("The server is working");
 });
 
+app.get("/info", (request, response) => {
+  const lengthOfPersons = persons.length;
+  const date = new Date();
+  response.send(
+    `<P>Phoenbook has info for ${lengthOfPersons} peoples</P> 
+    <P>${date}</P>`,
+  );
+});
+
 app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
