@@ -67,6 +67,20 @@ app.post("/api/persons", (request, response) => {
   const body = request.body;
   const id = Math.floor(Math.random() * 10000);
 
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: "Required field is missng",
+    });
+  }
+
+  const nameExists = persons.find((person) => person.name === body.name);
+
+  if (nameExists) {
+    return response.status(409).json({
+      error: "name must be unique",
+    });
+  }
+
   const person = {
     id: id,
     name: body.name,
