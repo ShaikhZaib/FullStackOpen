@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
-if (process.argv.length < 3) {
-  console.log("Please provide the password as an argument");
-  process.exit(1);
-}
+// if (process.argv.length < 3) {
+//   console.log("Please provide the password as an argument");
+//   process.exit(1);
+// }
 
-const password = process.argv[2];
-
-const url = `mongodb+srv://shaikhzaib04_db_user:${password}@cluster0.qfeisig.mongodb.net/phonebookApp?appName=Cluster0`;
+const url = MONGODB_URI;
 
 mongoose.set("strictQuery", false);
 
@@ -20,16 +18,16 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model("Person", personSchema);
 
-if (process.argv.length === 3) {
-  Person.find({}).then((result) => {
-    console.log("phonebook: ");
-    result.forEach((person) => {
-      console.log(`${person.name} ${person.number}`);
-    });
-    mongoose.connection.close();
-  });
-  return;
-}
+// if (process.argv.length === 3) {
+//   Person.find({}).then((result) => {
+//     console.log("phonebook: ");
+//     result.forEach((person) => {
+//       console.log(`${person.name} ${person.number}`);
+//     });
+//     mongoose.connection.close();
+//   });
+//   return;
+// }
 
 const person = new Person({
   name: process.argv[3],
