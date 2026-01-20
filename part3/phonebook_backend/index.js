@@ -75,7 +75,6 @@ app.delete("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  const id = Math.floor(Math.random() * 10000);
 
   if (!body.name || !body.number) {
     return response.status(400).json({
@@ -83,25 +82,24 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const nameExists = persons.find((person) => person.name === body.name);
+  // const nameExists = persons.find((person) => person.name === body.name);
 
-  if (nameExists) {
-    return response.status(409).json({
-      error: "name must be unique",
-    });
-  }
+  // if (nameExists) {
+  //   return response.status(409).json({
+  //     error: "name must be unique",
+  //   });
+  // }
 
-  const person = {
-    id: id,
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = persons.concat(person);
-
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT);
 console.log(`Server running of port: ${PORT}`);
