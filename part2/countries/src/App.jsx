@@ -21,11 +21,14 @@ function App() {
   const capital =
     filteredCountries.length === 1 ? filteredCountries[0].capital[0] : null;
 
+  // UseEffect for getting all the countries
   useEffect(() => {
     axios.get(`${baseUrl}/all`).then((response) => {
       setCountries(response.data);
     });
   }, []);
+
+  //Weather API UseEffect
   useEffect(() => {
     if (!capital) {
       setWeather(null);
