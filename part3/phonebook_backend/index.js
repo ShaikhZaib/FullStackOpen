@@ -39,12 +39,18 @@ let persons = [
 ];
 
 app.get("/info", (request, response) => {
-  const lengthOfPersons = persons.length;
-  const date = new Date();
-  response.send(
-    `<P>Phoenbook has info for ${lengthOfPersons} peoples</P> 
-    <P>${date}</P>`,
-  );
+  Person.countDocuments({}).then((count) => {
+    response.send(
+      `<P>Phoenbook has info for ${count} peoples</P>
+     <P>${new Date()}</P>`,
+    );
+  });
+  // const lengthOfPersons = persons.length;
+  // const date = new Date();
+  // response.send(
+  //   `<P>Phoenbook has info for ${lengthOfPersons} peoples</P>
+  //   <P>${date}</P>`,
+  // );
 });
 
 app.get("/api/persons", (request, response, next) => {
@@ -55,17 +61,12 @@ app.get("/api/persons", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = persons.find((person) => person.id === id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).json({
-      error: "Person not found",
-    });
-  }
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      response.json(person);
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response, next) => {
