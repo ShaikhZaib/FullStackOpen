@@ -47,10 +47,12 @@ app.get("/info", (request, response) => {
   );
 });
 
-app.get("/api/persons", (request, response) => {
-  Person.find({}).then((persons) => {
-    response.json(persons);
-  });
+app.get("/api/persons", (request, response, next) => {
+  Person.find({})
+    .then((persons) => {
+      response.json(persons);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -102,3 +104,14 @@ app.post("/api/persons", (request, response) => {
 const PORT = process.env.PORT;
 app.listen(PORT);
 console.log(`Server running of port: ${PORT}`);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+app.use(errorHandler);
