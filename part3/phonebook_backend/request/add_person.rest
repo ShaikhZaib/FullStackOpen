@@ -5,3 +5,12 @@ Content-Type: application/json
     "name": "Shaikh Zaib",
     "number": "221-32-4242" 
 }
+
+###
+PUT http://localhost:3001/api/persons/6970f4e187ab286e13f7d143
+Content-Type: application/json
+
+{
+    "number": "221-32-4242" 
+}
+
