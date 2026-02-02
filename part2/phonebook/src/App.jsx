@@ -25,7 +25,7 @@ function App() {
     if (existingPerson) {
       if (
         window.confirm(
-          `${newName} is already added to phonebook, replace the old number with the new one?`
+          `${newName} is already added to phonebook, replace the old number with the new one?`,
         )
       ) {
         const updatedPerson = {
@@ -41,9 +41,9 @@ function App() {
                 return person.id !== returnedPerson.id
                   ? person
                   : returnedPerson;
-              })
+              }),
             );
-            setMessage(`Added ${returnedPerson.name}`);
+            setMessage(`Updated ${returnedPerson.name}`);
             setMessageClass(success);
             setTimeout(() => {
               setMessage(null);
@@ -52,18 +52,25 @@ function App() {
             setNewName("");
             setNewNumber("");
           })
-          .catch(() => {
-            setMessage(
-              `Information of ${existingPerson.name} has alredy been removed from the server`
-            );
-            setMessageClass(failure);
+          .catch((error) => {
+            if (error.response && error.response.status === 400) {
+              setMessage(error.response.data.error);
+              setMessageClass(failure);
+            } else {
+              setMessage(
+                `Information of ${existingPerson.name} has alredy been removed from the server`,
+              );
+              setMessageClass(failure);
+              setPersons(
+                persons.filter((person) => person.name !== existingPerson.name),
+              );
+            }
+
             setTimeout(() => {
               setMessage(null);
               setMessageClass("");
             }, 5000);
-            setPersons(
-              persons.filter((person) => person.name !== existingPerson.name)
-            );
+
             setNewName("");
             setNewNumber("");
           });
@@ -79,17 +86,27 @@ function App() {
       number: newNumber,
     };
 
-    phonebookServices.create(NewPerson).then((response) => {
-      setPersons(persons.concat(response.data));
-      setMessage(`Added ${NewPerson.name}`);
-      setMessageClass(success);
-      setTimeout(() => {
-        setMessage(null);
-        setMessageClass("");
-      }, 5000);
-      setNewName("");
-      setNewNumber("");
-    });
+    phonebookServices
+      .create(NewPerson)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setMessage(`Added ${response.data.name}`);
+        setMessageClass(success);
+        setTimeout(() => {
+          setMessage(null);
+          setMessageClass("");
+        }, 5000);
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        setMessage(error.response.data.error);
+        setMessageClass(failure);
+        setTimeout(() => {
+          setMessage(null);
+          setMessageClass("");
+        }, 5000);
+      });
   };
 
   const handleNameChange = (event) => {
@@ -125,7 +142,7 @@ function App() {
     searchName === ""
       ? persons
       : persons.filter((person) =>
-          person.name.toLowerCase().includes(searchName.toLowerCase())
+          person.name.toLowerCase().includes(searchName.toLowerCase()),
         );
 
   return (
